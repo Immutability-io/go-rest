@@ -35,7 +35,7 @@ func health(w http.ResponseWriter, r *http.Request) {
 	rand.Seed(422)
 	answers := []int{
 		http.StatusContinue,
-		http.StatusSwitchingProtocols
+		http.StatusSwitchingProtocols,
 	}
 
 	w.WriteHeader(answers[rand.Intn(len(answers))])
