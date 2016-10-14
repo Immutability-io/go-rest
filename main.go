@@ -29,8 +29,6 @@ func index(w http.ResponseWriter, r *http.Request) {
 
 func health(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /health request")
-	log.Println("Responsing to /health request")
-	log.Println("Responsing to /health request")
 	log.Println(r.UserAgent())
 	rand.Seed(422)
 	answers := []int{
@@ -77,12 +75,8 @@ func health(w http.ResponseWriter, r *http.Request) {
 		http.StatusServiceUnavailable,
 		http.StatusGatewayTimeout,
 		http.StatusHTTPVersionNotSupported,
-		http.StatusInsufficientStorage,
-		http.StatusLoopDetected,
-		http.StatusNotExtended,
 		http.StatusNetworkAuthenticationRequired,
 	}
 
 	w.WriteHeader(answers[rand.Intn(len(answers))])
-	fmt.Fprintln(w, "Hello:", name)
 }
