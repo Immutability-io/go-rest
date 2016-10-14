@@ -30,7 +30,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 func health(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /health request")
 	log.Println(r.UserAgent())
-	rand.Seed(422)
+	rand.Seed(42)
 	answers := []int{
 		http.StatusOK,
 		http.StatusCreated,
@@ -77,6 +77,7 @@ func health(w http.ResponseWriter, r *http.Request) {
 		http.StatusHTTPVersionNotSupported,
 		http.StatusNetworkAuthenticationRequired,
 	}
+	log.Println(rand.Intn(len(answers)))
 
 	w.WriteHeader(answers[rand.Intn(len(answers))])
 }
