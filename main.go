@@ -33,7 +33,8 @@ func health(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.UserAgent())
 	t :=  time.Now()
 	log.Println(t)
-	rand.Seed(t.Second())
+	i := int(t.Nanosecond())
+	rand.Seed(i)
 	answers := []int{
 		http.StatusOK,
 		http.StatusCreated,
