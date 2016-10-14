@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"math/rand"
+	"time"
 	"github.com/gorilla/mux"
 )
 
@@ -30,7 +31,9 @@ func index(w http.ResponseWriter, r *http.Request) {
 func health(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /health request")
 	log.Println(r.UserAgent())
-	rand.Seed(42)
+	t :=  time.Now()
+	log.Println(t)
+	rand.Seed(t.Nanosecond())
 	answers := []int{
 		http.StatusOK,
 		http.StatusCreated,
