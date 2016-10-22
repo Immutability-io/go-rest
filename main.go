@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"math/rand"
 	"time"
+	"strings"
 	"github.com/gorilla/mux"
 )
 
@@ -28,8 +29,8 @@ func index(w http.ResponseWriter, r *http.Request) {
 	addrs, _ := net.LookupIP(host)
 	for _, addr := range addrs {
 	    if ipv4 := addr.To4(); ipv4 != nil {
-					fmt.Fprintln(w, "{ \"Host\": \"",host,"\",")
-					fmt.Fprintln(w, "\"IPv4\": \"",ipv4,"\"}")
+					fmt.Fprintln(w, "{ \"Host\": \"", strings.TrimSpace(host), "\",")
+					fmt.Fprintln(w, "\"IPv4\": \"", strings.TrimSpace(ipv4), "\"}")
 	    }
 	}
 }
