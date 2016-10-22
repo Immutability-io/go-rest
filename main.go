@@ -28,7 +28,7 @@ func index(w http.ResponseWriter, r *http.Request) {
 	addrs, _ := net.LookupIP(host)
 	for _, addr := range addrs {
 	    if ipv4 := addr.To4(); ipv4 != nil {
-					fmt.Fprintf(w, "{\n\"Host\": \"%v\",\n\"IPv4\": \"%v\"\n}", host, ipv4)
+					fmt.Fprintf(w, "{\n\"Host\": \"%v\",\n\"IPv4\": \"%v\"\n}\n", host, ipv4)
 	    }
 	}
 }
