@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"os"
+	"net"
 	"net/http"
 	"math/rand"
 	"time"
@@ -12,7 +14,7 @@ import (
 func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/hello/{name}", index).Methods("GET")
+	router.HandleFunc("/hello", index).Methods("GET")
 	router.HandleFunc("/health", health).Methods("GET")
 	router.HandleFunc("/unhealthy", unhealthy).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", router))
@@ -21,12 +23,14 @@ func main() {
 func index(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /hello request")
 	log.Println(r.UserAgent())
-
-	vars := mux.Vars(r)
-	name := vars["name"]
-
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintln(w, "Hello:", name)
+	host, _ := os.Hostname()
+	addrs, _ := net.LookupIP(host)
+	for _, addr := range addrs {
+	    if ipv4 := addr.To4(); ipv4 != nil {
+	        fmt.Fprintln(w, "IPv4: ", ipv4)
+	    }
+	}
 }
 
 func health(w http.ResponseWriter, r *http.Request) {
