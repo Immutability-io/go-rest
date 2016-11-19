@@ -50,12 +50,10 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	if err == nil {
 		if cookie.Value == "supersecret" {
 			w.WriteHeader(http.StatusOK)
-		}
-		else {
+		}	else {
 			w.WriteHeader(http.StatusUnauthorized)
 		}
-	}
-	else {
+	}	else {
 		w.WriteHeader(http.StatusUnauthorized)
 	}
 
