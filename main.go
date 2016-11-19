@@ -9,18 +9,25 @@ import (
 	"math/rand"
 	"time"
 	"github.com/gorilla/mux"
+	"github.com/gorilla/handlers"
+	"github.com/joho/godotenv"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/auth0/go-jwt-middleware"
+
 )
 
 func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/hello", index).Methods("GET")
+	router.HandleFunc("/auth", auth).Methods("GET")
+	router.HandleFunc("/login", login).Methods("POST")
+	router.HandleFunc("/hello", hello).Methods("GET")
 	router.HandleFunc("/health", health).Methods("GET")
 	router.HandleFunc("/unhealthy", unhealthy).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":443", "/etc/ssl/service.crt", "/etc/ssl/service.key", router))
 }
 
-func index(w http.ResponseWriter, r *http.Request) {
+func hello(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /hello request")
 	log.Println(r.UserAgent())
 	w.WriteHeader(http.StatusOK)
@@ -37,6 +44,28 @@ func index(w http.ResponseWriter, r *http.Request) {
 func health(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /health request")
 	log.Println(r.UserAgent())
+
+	w.WriteHeader(http.StatusOK)
+}
+
+func auth(w http.ResponseWriter, r *http.Request) {
+	log.Println("Responsing to /auth request")
+	log.Println(r.UserAgent())
+	var cookie,err = req.Cookie("IMMUTABILITY_SSO")
+	if err == nil {
+			var cookievalue = cookie.Value
+			w.WriteHeader(http.StatusOK)
+	}
+
+	w.WriteHeader(http.StatusUnauthorized)
+}
+
+func login(w http.ResponseWriter, r *http.Request) {
+	log.Println("Responsing to /login request")
+	log.Println(r.UserAgent())
+	expiration := time.Now().Add(365 * 24 * time.Hour)
+	cookie    :=    http.Cookie{Name: "IMMUTABILITY_SSO", Value:"supersecret", Domain: ".immutability.io", Expires:expiration}
+	http.SetCookie(w, &cookie)
 
 	w.WriteHeader(http.StatusOK)
 }
