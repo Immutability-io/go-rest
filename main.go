@@ -48,10 +48,18 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.UserAgent())
 	var cookie,err = r.Cookie("IMMUTABILITY_SSO")
 	if err == nil {
+		if cookie.Value == "supersecret" {
 			w.WriteHeader(http.StatusOK)
+		}
+		else {
+			w.WriteHeader(http.StatusUnauthorized)
+		}
+	}
+	else {
+		w.WriteHeader(http.StatusUnauthorized)
 	}
 
-	w.WriteHeader(http.StatusUnauthorized)
+
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
