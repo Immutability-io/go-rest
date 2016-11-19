@@ -48,7 +48,6 @@ func auth(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.UserAgent())
 	var cookie,err = r.Cookie("IMMUTABILITY_SSO")
 	if err == nil {
-			var cookievalue = cookie.Value
 			w.WriteHeader(http.StatusOK)
 	}
 
