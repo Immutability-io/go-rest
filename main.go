@@ -9,11 +9,6 @@ import (
 	"math/rand"
 	"time"
 	"github.com/gorilla/mux"
-	"github.com/gorilla/handlers"
-	"github.com/joho/godotenv"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/auth0/go-jwt-middleware"
-
 )
 
 func main() {
@@ -24,7 +19,7 @@ func main() {
 	router.HandleFunc("/hello", hello).Methods("GET")
 	router.HandleFunc("/health", health).Methods("GET")
 	router.HandleFunc("/unhealthy", unhealthy).Methods("GET")
-	log.Fatal(http.ListenAndServe(":443", "/etc/ssl/service.crt", "/etc/ssl/service.key", router))
+	log.Fatal(http.ListenAndServeTLS(":443", "/etc/ssl/service.crt", "/etc/ssl/service.key", router))
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +46,7 @@ func health(w http.ResponseWriter, r *http.Request) {
 func auth(w http.ResponseWriter, r *http.Request) {
 	log.Println("Responsing to /auth request")
 	log.Println(r.UserAgent())
-	var cookie,err = req.Cookie("IMMUTABILITY_SSO")
+	var cookie,err = r.Cookie("IMMUTABILITY_SSO")
 	if err == nil {
 			var cookievalue = cookie.Value
 			w.WriteHeader(http.StatusOK)
