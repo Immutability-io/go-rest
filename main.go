@@ -31,7 +31,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
 	forward  := r.Header.Get("X-Forwarded-For")
 	for _, addr := range addrs {
 	    if ipv4 := addr.To4(); ipv4 != nil {
-					fmt.Fprintf(w, "{\n\"Host\": \"%v\",\n\"IPv4\": \"%v\"\n,\"RemoteAddr\": \"%v\"\n,\"X-Forwarded-For\": \"%v\"\n}\n", host, ipv4, r.RemoteAddr, forward)
+					fmt.Fprintf(w, "{\n\"Version\": \"v0.0.7\",\n\"Host\": \"%v\",\n\"IPv4\": \"%v\",\n\"RemoteAddr\": \"%v\",\n\"X-Forwarded-For\": \"%v\"\n}\n", host, ipv4, r.RemoteAddr, forward)
 	    }
 	}
 }
