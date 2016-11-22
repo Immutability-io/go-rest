@@ -11,13 +11,6 @@ import (
 	"github.com/gorilla/mux"
 )
 
-package main
-
-import (
-    "log"
-    "net/http"
-)
-
 func Run(addr string, sslAddr string, ssl map[string]string) chan error {
 
     errs := make(chan error)
