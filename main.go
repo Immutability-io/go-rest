@@ -11,20 +11,58 @@ import (
 	"github.com/gorilla/mux"
 )
 
+package main
+
+import (
+    "log"
+    "net/http"
+)
+
+func Run(addr string, sslAddr string, ssl map[string]string) chan error {
+
+    errs := make(chan error)
+
+		router := mux.NewRouter().StrictSlash(true)
+		router.HandleFunc("/auth", auth).Methods("GET")
+		router.HandleFunc("/login", login).Methods("POST")
+		router.HandleFunc("/hello", hello).Methods("GET")
+		router.HandleFunc("/health", health).Methods("GET")
+		router.HandleFunc("/unhealthy", unhealthy).Methods("GET")
+
+    // Starting HTTP server
+    go func() {
+        log.Printf("Staring HTTP service on %s ...", addr)
+
+        if err := http.ListenAndServe(addr, router); err != nil {
+            errs <- err
+        }
+
+    }()
+
+    // Starting HTTPS server
+    go func() {
+        log.Printf("Staring HTTPS service on %s ...", addr)
+        if err := http.ListenAndServeTLS(sslAddr, ssl["cert"], ssl["key"], router); err != nil {
+            errs <- err
+        }
+    }()
+
+    return errs
+}
+
 func main() {
 
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/auth", auth).Methods("GET")
-	router.HandleFunc("/login", login).Methods("POST")
-	router.HandleFunc("/hello", hello).Methods("GET")
-	router.HandleFunc("/health", health).Methods("GET")
-	router.HandleFunc("/unhealthy", unhealthy).Methods("GET")
-	go func() {
-		log.Fatal(http.ListenAndServeTLS(":443", "/etc/ssl/service.crt", "/etc/ssl/service.key", router))
-	}
-	go func() {
-		log.Fatal(http.ListenAndServe(":8080", router))
-	}
+    errs := Run(":8080", ":443", map[string]string{
+        "cert": "/etc/ssl/service.crt",
+        "key":  "/etc/ssl/service.key",
+    })
+
+    // This will run forever until channel receives error
+    select {
+    case err := <-errs:
+        log.Printf("Could not start serving service due to (error: %s)", err)
+    }
+
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
