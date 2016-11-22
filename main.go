@@ -19,7 +19,12 @@ func main() {
 	router.HandleFunc("/hello", hello).Methods("GET")
 	router.HandleFunc("/health", health).Methods("GET")
 	router.HandleFunc("/unhealthy", unhealthy).Methods("GET")
-	log.Fatal(http.ListenAndServeTLS(":443", "/etc/ssl/service.crt", "/etc/ssl/service.key", router))
+	go func() {
+		log.Fatal(http.ListenAndServeTLS(":443", "/etc/ssl/service.crt", "/etc/ssl/service.key", router))
+	}
+	go func() {
+		log.Fatal(http.ListenAndServe(":8080", router))
+	}
 }
 
 func hello(w http.ResponseWriter, r *http.Request) {
